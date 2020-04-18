@@ -491,7 +491,6 @@ static uint selmasks[] = {
 	[SEL_RECTANGULAR] = Mod1Mask,
 };
 
-ResourcePref resources[] = { };
 /*
  * Printable characters in ASCII, used to estimate the advance width
  * of single wide characters.
