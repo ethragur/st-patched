@@ -698,7 +698,7 @@ setsel(char *str, Time t)
 
 	Arg larg;
 	larg.i= 1;
-	clipcopy(larg);
+	clipcopy(&larg);
 }
 
 void
@@ -721,7 +721,7 @@ brelease(XEvent *e)
 	{
 		Arg larg;
 		larg.i= 1;
-		clippaste(larg);
+		clippaste(&larg);
 	}
 	else if (e->xbutton.button == Button1)
 		mousesel(e, 1);
