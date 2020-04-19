@@ -272,8 +272,12 @@ static char *opt_title = NULL;
 
 static int oldbutton = 3; /* button event on startup: 3 = release */
 
+static const char *CLIPBOARD_TYPES[] = {
+	"PRIMARY", "SECONDARY", "CLIPBOARD"
+};
+
 void
-clipcopy(const Arg *dummy)
+clipcopy(const Arg *arg)
 {
 	Atom clipboard;
 
@@ -282,17 +286,17 @@ clipcopy(const Arg *dummy)
 
 	if (xsel.primary != NULL) {
 		xsel.clipboard = xstrdup(xsel.primary);
-		clipboard = XInternAtom(xw.dpy, "CLIPBOARD", 0);
+		clipboard = XInternAtom(xw.dpy, CLIPBOARD_TYPES[arg->i] , 0);
 		XSetSelectionOwner(xw.dpy, clipboard, xw.win, CurrentTime);
 	}
 }
 
 void
-clippaste(const Arg *dummy)
+clippaste(const Arg *arg)
 {
 	Atom clipboard;
 
-	clipboard = XInternAtom(xw.dpy, "CLIPBOARD", 0);
+	clipboard = XInternAtom(xw.dpy, CLIPBOARD_TYPES[arg->i], 0);
 	XConvertSelection(xw.dpy, clipboard, xsel.xtarget, clipboard,
 			xw.win, CurrentTime);
 }
@@ -692,7 +696,9 @@ setsel(char *str, Time t)
 	if (XGetSelectionOwner(xw.dpy, XA_PRIMARY) != xw.win)
 		selclear();
 
-	clipcopy(NULL);
+	Arg larg;
+	larg.i= 1;
+	clipcopy(larg);
 }
 
 void
@@ -712,7 +718,11 @@ brelease(XEvent *e)
 	if (mouseaction(e, 1))
 		return;
  	if (e->xbutton.button == Button2)
-		clippaste(NULL);
+	{
+		Arg larg;
+		larg.i= 1;
+		clippaste(larg);
+	}
 	else if (e->xbutton.button == Button1)
 		mousesel(e, 1);
 }
